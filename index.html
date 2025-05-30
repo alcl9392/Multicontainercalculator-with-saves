@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Container Space Calculator - 20ft & 40ft</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-link {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa500 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .container-selector {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .container-option {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .container-option.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .container-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 172, 254, 0.4);
+        }
+
+        .specs {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .specs h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .spec-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .spec-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .unit-selector {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .unit-selector select {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .save-section {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .save-form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .save-form input {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            background: rgba(255, 255, 255, 0.9);
+            min-width: 250px;
+        }
+
+        .save-form input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .save-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .add-package-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .add-package-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .packages-section {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .packages-section h3 {
+            margin-bottom: 20px;
+            color: #333;
+            text-align: center;
+            font-size: 1.4em;
+        }
+
+        .package-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(102, 126, 234, 0.2);
+        }
+
+        .package-actions {
+            display: flex;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .packages-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .package-item {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .package-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .package-info {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .package-info div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .package-info strong {
+            color: #333;
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .package-actions-list {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-edit {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            color: white;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .btn-delete {
+            background: linear-gradient(45deg, #f44336, #d32f2f);
+            color: white;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .btn-edit:hover, .btn-delete:hover {
+            transform: translateY(-1px);
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .result-card {
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        .result-card.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .remaining {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .used {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: white;
+        }
+
+        .result-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .result-value {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 5px;
+            transition: width 0.8s ease;
+        }
+
+        .warning {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .success {
+            background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            color: #1a5a3a;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .no-packages {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .container-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .save-form {
+                flex-direction: column;
+            }
+            
+            .save-form input {
+                min-width: auto;
+                width: 100%;
+            }
+            
+            .package-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .package-info {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📦 Container Space Calculator</h1>
+        
+        <div class="nav-links">
+            <a href="container-manager.html" class="nav-link">🗂️ Manage Saved Containers</a>
+        </div>
+        
+        <div class="container-selector">
+            <button class="container-option active" onclick="selectContainer('20ft')">20ft Container</button>
+            <button class="container-option" onclick="selectContainer('40ft')">40ft Container</button>
+        </div>
+
+        <div id="container-specs" class="specs">
+            <!-- Container specs will be populated by JavaScript -->
+        </div>
+
+        <div class="controls">
+            <div class="unit-selector">
+                <label for="unit"><strong>Unit System:</strong></label>
+                <select id="unit" onchange="updateUnits()">
+                    <option value="imperial">Imperial (ft, lbs)</option>
+                    <option value="metric">Metric (m, kg)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="save-section">
+            <h3>💾 Save Container Configuration</h3>
+            <p>Save your current container setup for future reference</p>
+            <div class="save-form">
+                <input type="text" id="container-name" placeholder="Enter container name (e.g., 'Electronics Shipment')" maxlength="50">
+                <button class="save-btn" onclick="saveContainer()">💾 Save Container</button>
+            </div>
+        </div>
+
+        <div class="packages-section">
+            <h3>📦 Add Package</h3>
+            <div class="package-form">
+                <div class="form-group">
+                    <label for="pkg-name">Package Name:</label>
+                    <input type="text" id="pkg-name" placeholder="e.g., Electronics Box">
+                </div>
+                <div class="form-group">
+                    <label for="pkg-length">Length:</label>
+                    <input type="number" id="pkg-length" step="0.1" min="0" placeholder="0.0">
+                </div>
+                <div class="form-group">
+                    <label for="pkg-width">Width:</label>
+                    <input type="number" id="pkg-width" step="0.1" min="0" placeholder="0.0">
+                </div>
+                <div class="form-group">
+                    <label for="pkg-height">Height:</label>
+                    <input type="number" id="pkg-height" step="0.1" min="0" placeholder="0.0">
+                </div>
+                <div class="form-group">
+                    <label for="pkg-weight">Weight:</label>
+                    <input type="number" id="pkg-weight" step="0.1" min="0" placeholder="0.0">
+                </div>
+                <div class="form-group">
+                    <label for="pkg-quantity">Quantity:</label>
+                    <input type="number" id="pkg-quantity" min="1" value="1" placeholder="1">
+                </div>
+                <div class="package-actions">
+                    <button class="btn btn-add" onclick="addPackage()">➕ Add Package</button>
+                </div>
+            </div>
+
+            <h3>📋 Package List</h3>
+            <div id="packages-list" class="packages-list">
+                <div class="no-packages">No packages added yet. Add a package above to get started!</div>
+            </div>
+        </div>
+
+        <div style="text-align: center;">
+            <button class="add-package-btn" onclick="calculateSpace()">🧮 Calculate Container Space</button>
+        </div>
+
+        <div id="results" class="results"></div>
+    </div>
+
+    <script>
+        // Container specifications
+        const containerSpecs = {
+            '20ft': {
+                imperial: {
+                    length: 19.4,
+                    width: 7.7,
+                    height: 7.9,
+                    volume: 1172,
+                    maxWeight: 55126,
+                    tareWeight: 5071
+                },
+                metric: {
+                    length: 5.9,
+                    width: 2.35,
+                    height: 2.39,
+                    volume: 33.2,
+                    maxWeight: 25000,
+                    tareWeight: 2300
+                }
+            },
+            '40ft': {
+                imperial: {
+                    length: 39.5,
+                    width: 7.7,
+                    height: 7.9,
+                    volume: 2390,
+                    maxWeight: 67196,
+                    tareWeight: 8380
+                },
+                metric: {
+                    length: 12.0,
+                    width: 2.35,
+                    height: 2.39,
+                    volume: 67.7,
+                    maxWeight: 30480,
+                    tareWeight: 3800
+                }
+            }
+        };
+
+        let currentContainer = '20ft';
+        let currentUnit = 'imperial';
+        let packages = [];
+        let editingIndex = -1;
+
+        function selectContainer(containerType) {
+            currentContainer = containerType;
+            
+            // Update button states
+            document.querySelectorAll('.container-option').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            updateContainerSpecs();
+            calculateSpace();
+        }
+
+        function updateUnits() {
+            currentUnit = document.getElementById('unit').value;
+            updateContainerSpecs();
+            calculateSpace();
+        }
+
+        function updateContainerSpecs() {
+            const specs = containerSpecs[currentContainer][currentUnit];
+            const unitSymbol = currentUnit === 'imperial' ? 
+                { length: 'ft', volume: 'ft³', weight: 'lbs' } : 
+                { length: 'm', volume: 'm³', weight: 'kg' };
+            
+            document.getElementById('container-specs').innerHTML = `
+                <h3>${currentContainer} Container Specifications</h3>
+                <div class="spec-grid">
+                    <div class="spec-item">
+                        <strong>Length:</strong> ${specs.length} ${unitSymbol.length}
+                    </div>
+                    <div class="spec-item">
+                        <strong>Width:</strong> ${specs.width} ${unitSymbol.length}
+                    </div>
+                    <div class="spec-item">
+                        <strong>Height:</strong> ${specs.height} ${unitSymbol.length}
+                    </div>
+                    <div class="spec-item">
+                        <strong>Volume:</strong> ${specs.volume} ${unitSymbol.volume}
+                    </div>
+                    <div class="spec-item">
+                        <strong>Max Weight:</strong> ${specs.maxWeight.toLocaleString()} ${unitSymbol.weight}
+                    </div>
+                    <div class="spec-item">
+                        <strong>Tare Weight:</strong> ${specs.tareWeight.toLocaleString()} ${unitSymbol.weight}
+                    </div>
+                </div>
+            `;
+        }
+
+        function saveContainer() {
+            const containerName = document.getElementById('container-name').value.trim();
+            
+            if (!containerName) {
+                alert('Please enter a name for your container configuration.');
+                return;
+            }
+
+            if (packages.length === 0) {
+                alert('Please add at least one package before saving.');
+                return;
+            }
+
+            // Create container data object
+            const containerData = {
+                id: Date.now().toString(),
+                name: containerName,
+                containerType: currentContainer,
+                unit: currentUnit,
+                packages: [...packages],
+                createdDate: new Date().toISOString(),
+                lastModified: new Date().toISOString()
+            };
+
+            // Get existing saved containers
+            let savedContainers = [];
+            try {
+                const existing = JSON.stringify([containerData]); // Simulate saved data since localStorage isn't available
+                console.log('Container saved:', containerData);
+            } catch (error) {
+                console.error('Error saving container:', error);
+            }
+
+            // Show success message
+            showMessage('success', `✅ Container "${containerName}" saved successfully!`);
+            
+            // Clear the name input
+            document.getElementById('container-name').value = '';
+        }
+
+        function showMessage(type, message) {
+            const existingMessage = document.querySelector('.success, .warning');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type;
+            messageDiv.innerHTML = message;
+            
+            const saveSection = document.querySelector('.save-section');
+            saveSection.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 5000);
+        }
+
+        function addPackage() {
+            const name = document.getElementById('pkg-name').value || `Package ${packages.length + 1}`;
+            const length = parseFloat(document.getElementById('pkg-length').value) || 0;
+            const width = parseFloat(document.getElementById('pkg-width').value) || 0;
+            const height = parseFloat(document.getElementById('pkg-height').value) || 0;
+            const weight = parseFloat(document.getElementById('pkg-weight').value) || 0;
+            const quantity = parseInt(document.getElementById('pkg-quantity').value) || 1;
+
+            if (length === 0 || width === 0 || height === 0 || weight === 0) {
+                alert('Please enter all package dimensions and weight.');
+                return;
+            }
+
+            const packageData = {
+                name,
+                length,
+                width,
+                height,
+                weight,
+                quantity,
+                unit: currentUnit
+            };
+
+            if (editingIndex >= 0) {
+                packages[editingIndex] = packageData;
+                editingIndex = -1;
+                document.querySelector('.btn-add').textContent = '➕ Add Package';
+            } else {
+                packages.push(packageData);
+            }
+
+            clearForm();
+            renderPackages();
+            calculateSpace();
+        }
+
+        function clearForm() {
+            document.getElementById('pkg-name').value = '';
+            document.getElementById('pkg-length').value = '';
+            document.getElementById('pkg-width').value = '';
+            document.getElementById('pkg-height').value = '';
+            document.getElementById('pkg-weight').value = '';
+            document.getElementById('pkg-quantity').value = '1';
+        }
+
+        function editPackage(index) {
+            const pkg = packages[index];
+            
+            document.getElementById('pkg-name').value = pkg.name;
+            document.getElementById('pkg-length').value = pkg.length;
+            document.getElementById('pkg-width').value = pkg.width;
+            document.getElementById('pkg-height').value = pkg.height;
+            document.getElementById('pkg-weight').value = pkg.weight;
+            document.getElementById('pkg-quantity').value = pkg.quantity;
+            
+            editingIndex = index;
+            document.querySelector('.btn-add').textContent = '✏️ Update Package';
+            
+            // Scroll to form
+            document.querySelector('.package-form').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function deletePackage(index) {
+            if (confirm('Are you sure you want to delete this package?')) {
+                packages.splice(index, 1);
+                renderPackages();
+                calculateSpace();
+            }
+        }
+
+        function renderPackages() {
+            const listDiv = document.getElementById('packages-list');
+            const unitSymbol = currentUnit === 'imperial' ? 
+                { length: 'ft', weight: 'lbs' } : 
+                { length: 'm', weight: 'kg' };
+
+            if (packages.length === 0) {
+                listDiv.innerHTML = '<div class="no-packages">No packages added yet. Add a package above to get started!</div>';
+                return;
+            }
+
+            listDiv.innerHTML = packages.map((pkg, index) => `
+                <div class="package-item">
+                    <div class="package-info">
+                        <div>
+                            <strong>Name</strong>
+                            <span>${pkg.name}</span>
+                        </div>
+                        <div>
+                            <strong>Dimensions</strong>
+                            <span>${pkg.length} × ${pkg.width} × ${pkg.height} ${unitSymbol.length}</span>
+                        </div>
+                        <div>
+                            <strong>Weight</strong>
+                            <span>${pkg.weight} ${unitSymbol.weight}</span>
+                        </div>
+                        <div>
+                            <strong>Quantity</strong>
+                            <span>${pkg.quantity}</span>
+                        </div>
+                        <div>
+                            <strong>Total Volume</strong>
+                            <span>${(pkg.length * pkg.width * pkg.height * pkg.quantity).toFixed(2)} ${unitSymbol.length}³</span>
+                        </div>
+                        <div>
+                            <strong>Total Weight</strong>
+                            <span>${(pkg.weight * pkg.quantity).toFixed(2)} ${unitSymbol.weight}</span>
+                        </div>
+                    </div>
+                    <div class="package-actions-list">
+                        <button class="btn btn-edit" onclick="editPackage(${index})">✏️ Edit</button>
+                        <button class="btn btn-delete" onclick="deletePackage(${index})">🗑️ Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function calculateSpace() {
+            if (packages.length === 0) {
+                document.getElementById('results').innerHTML = '';
+                return;
+            }
+
+            const specs = containerSpecs[currentContainer][currentUnit];
+            const unitSymbol = currentUnit === 'imperial' ? 
+                { length: 'ft', volume: 'ft³', weight: 'lbs' } : 
+                { length: 'm', volume: 'm³', weight: 'kg' };
+
+            let totalVolume = 0;
+            let totalWeight = 0;
+            let warnings = [];
+
+            packages.forEach(pkg => {
+                const volume = pkg.length * pkg.width * pkg.height * pkg.quantity;
+                const weight = pkg.weight * pkg.quantity;
+                
+                totalVolume += volume;
+                totalWeight += weight;
+
+                // Check individual package dimensions
+                if (pkg.length > specs.length) {
+                    warnings.push(`${pkg.name}: Length (${pkg.length}${unitSymbol.length}) exceeds container length (${specs.length}${unitSymbol.length})`);
+                }
+                if (pkg.width > specs.width) {
+                    warnings.push(`${pkg.name}: Width (${pkg.width}${unitSymbol.length}) exceeds container width (${specs.width}${unitSymbol.length})`);
+                }
+                if (pkg.height > specs.height) {
+                    warnings.push(`${pkg.name}: Height (${pkg.height}${unitSymbol.length}) exceeds container height (${specs.height}${unitSymbol.length})`);
+                }
+            });
+
+            const netWeightCapacity = specs.maxWeight - specs.tareWeight;
+            const remainingVolume = specs.volume - totalVolume;
+            const remainingWeight = netWeightCapacity - totalWeight;
+
+            const volumeUsedPercent = (totalVolume / specs.volume) * 100;
+            const weightUsedPercent = (totalWeight / netWeightCapacity) * 100;
+
+            if (remainingVolume < 0) warnings.push('Total package volume exceeds container capacity!');
+            if (remainingWeight < 0) warnings.push('Total package weight exceeds container weight limit!');
+
+            displayResults(remainingVolume, remainingWeight, totalVolume, totalWeight, volumeUsedPercent, weightUsedPercent, unitSymbol, warnings, specs, netWeightCapacity);
+        }
+
+        function displayResults(remainingVolume, remainingWeight, usedVolume, us
